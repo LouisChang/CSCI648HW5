@@ -1,11 +1,3 @@
-//
-//  main.cpp
-//  CSCI648HW5
-//
-//  Created by Sidi Chang on 3/6/15.
-//  Copyright (c) 2015 Sidi Chang. All rights reserved.
-//
-
 //*************************************************************************
 // tabu.c
 // Purpose:  TABU SEARCH for the p-median problem. A short term memory
@@ -18,23 +10,21 @@
 //           MAXIT is the number of big iterations in which the sampling
 //           takes place.
 //
-// Compile Command:   g++ -g -Wall tabu.c rngs.c
+// Compile Command:   g++ -g -Wall tabu3.c rngs.c 
 //
 //*************************************************************************
 
-#include <iostream>
-#include <cmath>       // For the mod operator (%)
-#include <iomanip>    // setw() operator.
-#include <fstream>    // File i/o.
+#include <iostream.h>
+#include <math.h>       // For the mod operator (%)
+#include <iomanip.h>    // setw() operator.
+#include <fstream.h>    // File i/o.
 #include "rngs.h"       // Park-Miller RNG.
 
-using namespace std;
-
-const int nLoc = 15;    // Number of locations.
+const int nLoc = 12;    // Number of locations.
 const int memSize = 35; // Tabu step numbers.
-const int maxIt = 150;  // Max iteration attempted.
-const int nRow = 100;   // Number of rows of data.
-const int SEED = 777; // SEED for RNG.
+const int maxIt = 100;  // Max iteration attempted.
+const int nRow = 150;   // Number of rows of data.
+const int SEED = 1;     // SEED for RNG.
 
 typedef double Values[nRow + 1][nRow + 1];
 
@@ -49,60 +39,70 @@ int main ()
     int X[nLoc + 1];           // Vector
     int notX[(nRow-nLoc) + 1]; // Vector
     int all[nRow + 1];         // Index array.
-    double zObj=0.0;               // Objective value.
+    double zObj;               // Objective value.
     ifstream inFile;           // Input file stream variable.
-    
+      
+    // Initialize Distance Matrix
+
+    for (int i = 0; i < nRow; i++) {
+        for (int j = 0; j < nRow; j++)
+            Dist[i][j] = 20000.0;
+    } // for
+
     // Open input file
     
-    inFile.open("spd100.unfrm");
+    inFile.open("spd150.galvao");
     
     // Fill the 2D array with data from the file.
     
     for (int i = 0; i < nRow; i++) {
-        for (int j = 0; j < nRow; j++)
-            inFile >> Dist[i][j];
+        for (int j = 0; j < nRow; j++) { 
+             inFile >> Dist[i][j];
+//                cout << Dist[i][j] << ' ' ;
+        } // for
     } // for
-    
+
     // Close input file
     
     inFile.close();
-    
+
     // Initialize the index array to be partitioned into X and notX.
-    
-    for (int i = 0; i < nRow; i++)
+     
+    for (int i = 0; i < nRow; i++) 
         all[i] = i;
-    
+       
     // Randomly permute the index array before it is partitioned.
     
     Config(all);
-    
+
     // Partition the index array into X and notX.
     
     for (int i = 0; i < nRow; i++) {
         if (i < nLoc)
             X[i] = all[i];
-        else
+        else  
             notX[i-nLoc] = all[i];
     } // for
-    
+
     // Compute the initial objective function value.
     
     zObj = ObjCheck(Dist, X);
-    
+
     cout << "Starting p-median objective value is " << zObj << endl
-    << "P-columns in the initial solution.\n";
+         << "P-columns in the initial solution.\n";
     for (int i = 0; i < nLoc; i++)
         cout << X[i] << "  ";
-    
+
     cout << "\n\nColumns 4 and 5 represent cummulative totals for "
-    << "the number \n"
-    << "of tabu moves and the number of moves that meet the "
-    << "aspiration \n"
-    << "criterion per iteration.\n" << endl
-    << "Iter#    Curr Obj     Best Obj   Tabu#    Asp#" << endl;
-    
-    
+         << "the number \n"
+         << "of tabu moves and the number of moves that meet the "
+         << "aspiration \n"
+         << "criterion per iteration.\n" << endl
+         << "Iter#    Curr Obj     Best Obj   Tabu#    Asp#" << endl;
+
+
     Tabu(Dist, X, notX, zObj);
+
     
     return 0;
 } // main
@@ -113,7 +113,6 @@ int main ()
 //          generator.
 // Post:    The index array is no longer ordered.
 // *******************************************************************
-
 void Config( int all[] )   // Index array to jumble.
 {
     int L, L1;  //Temp storage variables.
@@ -134,7 +133,7 @@ void Config( int all[] )   // Index array to jumble.
 // long Equilikely( long a, long b );
 // Purpose: Returns an equilikely distributed integer between a and b
 //           inclusive. NOTE: use a < b
-//*******************************************************************
+//******************************************************************* 
 long Equilikely(long a,    // Minimum number.
                 long b)    // Maximum number.
 {
@@ -147,9 +146,9 @@ long Equilikely(long a,    // Minimum number.
 // double ObjCheck( Values Dist, const int X[] );
 // Purpose: Computes the sum of the row minimums of X.  This sum
 //          is used to check the function value computed by Tabu().
-//*******************************************************************
+//******************************************************************* 
 double ObjCheck( Values Dist,      // 2D array of data
-                const int X[] )   // X vector.
+                 const int X[] )   // X vector.
 {
     double sum = 0.0;   // Cumulative sum.
     double minVal;      // Current minimum row value.
@@ -162,7 +161,7 @@ double ObjCheck( Values Dist,      // 2D array of data
         }// for j
         sum = sum + minVal;
     } // for
-    
+   
     return (sum);
     
 } // ObjCheck()
@@ -170,12 +169,12 @@ double ObjCheck( Values Dist,      // 2D array of data
 //*******************************************************************
 // void Tabu( Values Dist, int X[], int notX[], double zObj );
 // Purpose: basic tabu search with aspiration
-//*******************************************************************
+//******************************************************************* 
 void Tabu( Values Dist,          // 2D array of data.
-          int X[],              // X vector
-          int notX[],           // Not X vector
-          double zObj )         // Initial objective value.
-{
+           int X[],              // X vector
+           int notX[],           // Not X vector
+           double zObj )         // Initial objective value.
+{ 
     double zBest = zObj;         // Best objective value.
     double zNew;                 // Interim objective value.
     double objBest;              // Interim objective value.
@@ -192,23 +191,22 @@ void Tabu( Values Dist,          // 2D array of data.
     int circ;                    // Circular list index.
     int in, out;                 // 'In' is element entering X, 'out' leaves
     bool value;                  // Flag.
-    
-    
+
     
     // Initialize short term memory - the tabu steps - to 0.
     
     for (int i = 0; i < memSize; i++) {
-        sTermMem[i][0] = 0;
-        sTermMem[i][1] = 0;
+         sTermMem[i][0] = 0;
+         sTermMem[i][1] = 0;
     } // for
     
     // Search max iteration different neighborhoods
     
     for (int i = 0; i < maxIt; i++) {
-        
+
         dzBest = 10000;
         for (int k = 0; k < nLoc; k++) {
-            for (int m = 0; m < nRow - nLoc; m++) {
+            for (int m = 0; m < nRow - nLoc; m++) { 
                 in = notX[m];
                 out = X[k];
                 
@@ -216,17 +214,17 @@ void Tabu( Values Dist,          // 2D array of data.
                 
                 for (int p = 0; p < nLoc; p++)
                     tempX[p] = X[p];
-                
+   
                 tempX[k] = in;
-                
+    
                 // Check new objective value
                 
                 zNew = ObjCheck(Dist, tempX);
-                diff = zNew - zObj;
-                
+                diff = zNew - zObj;      
+
                 // Check to see if the move is in STM
                 
-               if (diff < dzBest) {
+                if (diff < dzBest) {
                     value = false;
                     for (int d = 0; d < memSize; d++) {
                         if ((sTermMem[d][0] == out &&
@@ -235,14 +233,14 @@ void Tabu( Values Dist,          // 2D array of data.
                              sTermMem[d][0] == in))
                             value = true;
                     } // for
-                    
+ 
                     if (value == true && zNew < zBest) {
                         objBest = zNew;
                         dzBest = diff;
                         nBest[0] = k;
                         nBest[1] = m;
                         aspCount++;
-                    } else if (value == true) {
+                    } else if (value == true) { 
                         stCount++;
                     } else {
                         objBest = zNew;
@@ -271,27 +269,27 @@ void Tabu( Values Dist,          // 2D array of data.
             sTermMem[circ][1] = notX[nBest[1]];
         } // else
         
-        zObj = objBest;     //int objBest;
+        zObj = objBest;
         if (zObj < zBest) {
             zBest = zObj;
             itBest = i;
             for (int y = 0; y < nLoc; y++)
                 xBest[y] = X[y];
         } // if
-        
-        cout << resetiosflags(ios::right) << setiosflags(ios::left)
-        << "  " << setw(7) << i+1 << setw(13)  << zObj << setw(13)
-        << zBest << setw(9) << stCount << setw(7) << aspCount << endl;
+
+        cout << resetiosflags(ios::right) << setiosflags(ios::left) 
+             << "  " << setw(7) << i+1 << setw(13)  << zObj << setw(13)
+             << zBest << setw(9) << stCount << setw(7) << aspCount << endl;
         
     } // for
-    
+
     cout << "The best objective value was: " << zBest
-    << "\nThe best obj value was found in iteration number "
-    << itBest+1 << endl;
+         << "\nThe best obj value was found in iteration number "
+         << itBest+1 << endl; 
     for (int i = 0; i < nLoc; i++)
         cout << xBest[i] << "  " ;
     
     cout << "\nShort Term Memory count: " << stCount << endl
-    << "Aspiration count: " << aspCount << endl;
+         << "Aspiration count: " << aspCount << endl;
     
 } // Tabu()

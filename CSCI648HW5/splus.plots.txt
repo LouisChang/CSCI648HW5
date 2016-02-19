@@ -1,0 +1,53 @@
+Here are some instructions on how to produce plots
+for the tabu search homework asssigment via Splus.
+
+(1). Create a file of your output results from TS.
+     For example,  if you compile with 
+ 
+	g++ -g -Wall tabu.c rngs.c
+
+     then a.out is created.  Instead of routing the
+     output to the screen by entering `a.out' route
+     the output to a file pmed.out by `a.out > pmed.out'.
+
+(2). Strip off all introductory and summary information
+     in pmed.out.  The final format of pmed.out should 
+     look like
+
+  1      979.835      979.835      0        0
+  2      937.177      937.177      0        0
+  3      900.587      900.587      0        0
+
+
+(3). Now your ready to use Splus.  Enter `Splus' (do
+     not try to run it in the background with &). 
+     Eventually you will see a `>' prompt.  Enter
+
+> pmed.list <- scan("pmed.out",what=list(itr=0,obj=0,best=0,tabu=0,asp=0))
+
+     This makes the data available to Splus.  Next enter
+
+> plot(pmed.list$itr,pmed.list$obj,type="l",xlim=c(1,150),ylim=c(760,1000))
+or 
+> plot(splus.list$itr,splus.list$obj,type="l",xlim=c(0,500),ylim=c(250,1250))
+
+      This will plot all of the data points in pmed.out.  If you don't
+      want all the points plotted you can adjust xlim to start somewhere
+      other than iteration 1.  For example `xlim=c(25,150)' plots 
+      iterations 25 to 150.  (Note: you will get warning messages printed
+      to the screen for the values you have ignored, but this is ok.)
+      ylim adjusts the vertical axis range values if you use the 25 to 150
+      iterations then the range for ylim can be smaller say 760 to 780.
+
+(4). Now you are ready to print out the plot that appears in the motif 
+     window.  To do this, first make sure the printing options are 
+     correct. Click on OPTIONS and then on PRINTING...  In the command
+     line you should have `lpr -Php113'.  If you don't enter it.  Click
+     on SAVE and then CLOSE.  Now you are really ready to print.  Click 
+     on GRAPH and then on PRINT.  Your plot should appear on the printer
+     in Jones 113.
+
+
+
+Good luck.....
+

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5BC8E42C1AAA20E1007BF404 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5BC8E42B1AAA20E1007BF404 /* main.cpp */; };
+		5BC8E4341AAA2133007BF404 /* rngs.c in Sources */ = {isa = PBXBuildFile; fileRef = 5BC8E4321AAA2133007BF404 /* rngs.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +26,8 @@
 /* Begin PBXFileReference section */
 		5BC8E4281AAA20E1007BF404 /* CSCI648HW5 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = CSCI648HW5; sourceTree = BUILT_PRODUCTS_DIR; };
 		5BC8E42B1AAA20E1007BF404 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		5BC8E4321AAA2133007BF404 /* rngs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rngs.c; sourceTree = "<group>"; };
+		5BC8E4331AAA2133007BF404 /* rngs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rngs.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +60,8 @@
 		5BC8E42A1AAA20E1007BF404 /* CSCI648HW5 */ = {
 			isa = PBXGroup;
 			children = (
+				5BC8E4321AAA2133007BF404 /* rngs.c */,
+				5BC8E4331AAA2133007BF404 /* rngs.h */,
 				5BC8E42B1AAA20E1007BF404 /* main.cpp */,
 			);
 			path = CSCI648HW5;
@@ -119,6 +124,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5BC8E42C1AAA20E1007BF404 /* main.cpp in Sources */,
+				5BC8E4341AAA2133007BF404 /* rngs.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
